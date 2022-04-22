@@ -18,9 +18,22 @@ await mongoose.connect(process.env.MONGO_DB)
 app.listen(process.env.PORT, () => {
     console.log(`Listening in port ${process.env.PORT}!`);
 });
-/*
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjYzMDJkNGIwZTFkZTlkMjhlOWJiZTMiLCJpYXQiOjE2NTA2NjQ1MzgsImV4cCI6MTY1MDY2ODEzOH0.h04mB110MDu0Q1ZxtbeUFmjCxS1vWXEfELkxWZOmpvw'
+
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjYzMDJkNGIwZTFkZTlkMjhlOWJiZTMiLCJpYXQiOjE2NTA2NjgzNzUsImV4cCI6MTY1MDY3MTk3NX0.9us5Sp9ELToZqHNs6iyLT7HFPUU9KVuZn97QnMeCA0M'
+
 describe('GET /api/favs',() => {
+    it('responds with 200 and json containing a list of all tasks',(done) => {
+        request(app)
+            .get('/api/favs')
+            .set('Accept', 'application/json')
+            .auth(token, {type:'bearer'})
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err,res) => {
+                if (err) return done(err);
+                return done();
+            })
+    })
     it('should require authorization', (done) => {
         request(app)
             .get('/api/favs')
@@ -40,7 +53,7 @@ describe('GET /api/favs',() => {
                 name: "New favorites"
             })
             .set('Accept', 'application/json')
-            .set('Authorization','bearer ' + token)
+            .auth(token, {type:'bearer'})
             .expect('Content-Type', /json/)
             .expect(201)
             .end((err,res) => {
@@ -54,7 +67,7 @@ describe('GET /api/favs',() => {
         request(app)
             .get('/api/favs')
             .set('Accept', 'application/json')
-            .set('Authorization','bearer ' + token)
+            .auth(token, {type:'bearer'})
             .expect('Content-Type', /json/)
             .expect(200)
             .end((err,res) => {
@@ -95,20 +108,19 @@ describe('GET /api/favs',() => {
             })
     })
 })
-*/
 
-describe('POST /auth/local/login', () => {
+describe('POST /auth/local/', () => {
     it('responds with 200 and user creation when data is valid', (done) => {
         request(app)
             .post('/auth/local/register')
             .send({
-                email: "johann2252252.gonzales99@gmail.com",
+                email: "2zales99@gmail.com",
                 password: "johann1234"
             })
             .expect('Content-Type', /json/)
             .expect(201)
             .then(response => {
-                assert(response.body.data.email, 'johann2252252.gonzales99@gmail.com')
+                assert(response.body.data.email, '2zales99@gmail.com')
                 done();
             })
             .catch(err => done(err))
