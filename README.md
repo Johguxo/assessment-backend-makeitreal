@@ -10,3 +10,15 @@ To get the Node server running locally:
 - Install MongoDB Community Edition ([instructions](https://docs.mongodb.com/manual/installation/#tutorials)) and run it by executing `mongod`
 - `npm start` to start the local server
 - `npm run test` to start the test
+
+# Environment
+
+```
+    CLUSTER_NAME=Cluster0
+    USERNAME=admin
+    PASSWORD=Clave1234
+    MONGO_DB=mongodb+srv://admin:Clave1234@cluster0.fjwgb.mongodb.net/assessment-backend
+    PORT=2005
+    TOKEN_SECRET=johguxo
+    TOKEN_EXPIRES=1h
+```
