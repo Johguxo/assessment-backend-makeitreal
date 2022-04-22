@@ -22,6 +22,18 @@ app.listen(process.env.PORT, () => {
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjYzMDJkNGIwZTFkZTlkMjhlOWJiZTMiLCJpYXQiOjE2NTA2NjgzNzUsImV4cCI6MTY1MDY3MTk3NX0.9us5Sp9ELToZqHNs6iyLT7HFPUU9KVuZn97QnMeCA0M'
 
 describe('GET /api/favs',() => {
+    it('should require authorization', (done) => {
+        request(app)
+            .get('/api/favs')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(401)
+            .end(function(err, res) {
+                if (err) return done(err);
+                return done();
+            });
+    });
+
     it('responds with 200 and json containing a list of all tasks',(done) => {
         request(app)
             .get('/api/favs')
@@ -34,17 +46,7 @@ describe('GET /api/favs',() => {
                 return done();
             })
     })
-    it('should require authorization', (done) => {
-        request(app)
-            .get('/api/favs')
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(401)
-            .end(function(err, res) {
-                if (err) return done(err);
-                return done();
-            });
-    });
+    
 
     it('responds with 201 and create new list fav',(done) => {
         request(app)
@@ -80,7 +82,7 @@ describe('GET /api/favs',() => {
         request(app)
             .get('/api/favs/626311daa61b613b8d39eab4')
             .set('Accept', 'application/json')
-            .set('Authorization','bearer ' + token)
+            .auth(token, {type:'bearer'})
             .expect('Content-Type', /json/)
             .expect(200)
             .end((err,res) => {
@@ -98,8 +100,8 @@ describe('GET /api/favs',() => {
                 description: "My favorite sport",
                 link: "https://google.com"
             })
+            .auth(token, {type:'bearer'})
             .set('Accept', 'application/json')
-            .set('Authorization','bearer ' + token)
             .expect('Content-Type', /json/)
             .expect(200)
             .end((err,res) => {
@@ -110,21 +112,6 @@ describe('GET /api/favs',() => {
 })
 
 describe('POST /auth/local/', () => {
-    it('responds with 200 and user creation when data is valid', (done) => {
-        request(app)
-            .post('/auth/local/register')
-            .send({
-                email: "2zales99@gmail.com",
-                password: "johann1234"
-            })
-            .expect('Content-Type', /json/)
-            .expect(201)
-            .then(response => {
-                assert(response.body.data.email, '2zales99@gmail.com')
-                done();
-            })
-            .catch(err => done(err))
-    });
     it('responds with 200 and user logged ', (done) => {
         request(app)
             .post('/auth/local/login')
@@ -135,7 +122,7 @@ describe('POST /auth/local/', () => {
             .expect('Content-Type', /json/)
             .expect(200)
             .then(response => {
-                console.log(response.body.token)
+                //console.log(response.body.token)
                 done();
             })
             .catch(err => done(err))
