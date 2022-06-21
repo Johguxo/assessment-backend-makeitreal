@@ -1,6 +1,5 @@
 const { Model, fields, references } = require('./model');
 const { Fav } = require('../fav/model');
-const { sign } = require('jsonwebtoken');
 const { paginationParseParams, sortParseParams, sortingStr } = require('../utils');
 const referencesNames = Object.getOwnPropertyNames(references);
 

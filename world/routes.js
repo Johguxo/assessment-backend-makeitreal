@@ -3,17 +3,15 @@ const router = express.Router();
 const controller = require('./controller');
 const { auth, owner } = require('../auth');
 
-// GET: fetch users
+// GET: fetch World
 router.get('/', auth, controller.fetch);
-// POST: create new listFavs
+// POST: create new World
 router.post('/', auth, controller.create);
-// POST: add new fav in listFavs
-router.post('/:id', auth, controller.addItem);
-// GET: fetch an user by id
+// GET: fetch an world by id
 router.get('/:id', auth, controller.read);
-// PATCH: update a task
+// PATCH: update world
 router.patch('/:id', auth, owner, controller.update);
-// DELETE: delete an user
+// DELETE: delete an world
 router.delete('/:id', auth, controller.delete);
 
 module.exports = router
