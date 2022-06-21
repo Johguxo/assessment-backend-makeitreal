@@ -3,6 +3,12 @@ const { Schema } = mongoose;
 const { hash, compare } = require('bcryptjs');
 
 const fields = {
+  firstName: {
+    type: String,
+  },
+  lastName: {
+    type: String,
+  },
   email: {
     type: String,
     unique: true,
@@ -15,6 +21,9 @@ const fields = {
     minLength: 6,
     trim: true,
   },
+  image: {
+    type: String,
+  }
 };
 
 const userSchema = Schema(fields, { 

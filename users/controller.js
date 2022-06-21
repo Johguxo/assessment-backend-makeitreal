@@ -8,7 +8,7 @@ exports.signup = async (req, res, next) => {
   try {
     const user = await document.save();
     const { _id } = user;
-    const token = await sign({ _id }, 'johguxo', { expiresIn: 60 * 60 });
+    const token = sign({ _id }, 'johguxo', { expiresIn: 60 * 60 });
     res.status(201); // Created
     res.json({ 
       success: true,  
@@ -42,11 +42,16 @@ exports.signin = async (req, res, next) => {
           message: `Email or Password are invalid`,
         });
       } else {
-        const { _id } = user;
+        const { _id, image, firstName, lastName, email } = user;
         const token = sign({ _id }, 'johguxo', { expiresIn: 60 * 60 });
         res.status(200);
         res.json({
-          token
+          token,
+          _id,
+          firstName,
+          lastName,
+          email,
+          image,
         });
       }
     }

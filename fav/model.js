@@ -14,7 +14,6 @@ const fields = {
   },
   link: {
     type: String,
-    required: true,
     default: ''
   }
 };
