@@ -22,6 +22,7 @@ const references = {
 const noteSchema = Schema(Object.assign(fields,references), { timestamps: true });
 
 module.exports = {
-  Note: mongoose.model('Note', noteSchema),
-  fields
+  Model: mongoose.model('Note', noteSchema),
+  fields,
+  references,
 };
