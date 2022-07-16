@@ -4,13 +4,18 @@ const referencesNames = Object.getOwnPropertyNames(references);
 
 exports.fetch_last = async (req, res, next) => {
   const { query = {} } = req;
-  let findQuery = {};
+  let start = new Date();
+  start.setHours(0,0,0,0);
+
+  let end = new Date();
+  end.setHours(23,59,59,999);
+  let findQuery = {createdAt: { $gte: start, $lt: end}};
   if (query.userId) {
-    findQuery = { userId: query.userId };
+    findQuery = { userId: query.userId,
+                  createdAt: { $gte: start, $lt: end} } ;
   }
   try {
-    const doc = await Model.findOne(findQuery).sort({'createdAt': -1}).exec();
-
+    const doc = await Model.findOne(findQuery).exec();
     if (!doc) {
       const message = `${Model.modelName} not found`;
       next({
@@ -24,6 +29,26 @@ exports.fetch_last = async (req, res, next) => {
         data: doc,
       });
     }
+  } catch (err) {
+    next(new Error(err))
+  }
+};
+
+exports.fetch_all = async (req, res, next) => {
+  const { params = {} } = req;
+  const populate = referencesNames.join(' ');
+
+  let findQuery = {};
+  if (params.userId) {
+    findQuery = { userId: params.userId };
+  }
+  
+  try {
+    const docs = await Model.find(findQuery)
+    res.status(200).json({ 
+      success: true, 
+      data: docs
+    });
   } catch (err) {
     next(new Error(err))
   }
@@ -107,9 +132,7 @@ exports.update = async (req, res, next) => {
   const { id } = req.params;
   const body = req.body;
   try {
-    const updated = await Model.findByIdAndUpdate(id, {
-      $set: body
-    }, { });
+    const updated = await Model.findByIdAndUpdate(id, body,{ new: true });
     res.status(200).json({ 
       success: true, 
       message: `${Model.modelName} has been updated`,
