@@ -70,7 +70,7 @@ exports.update = async (req, res, next) => {
   try {
     const updated = await Model.findByIdAndUpdate(id, {
       $set: body
-    }, { });
+    }, { new: true },);
     res.status(200).json({ 
       success: true, 
       message: `${Model.modelName} has been updated`,

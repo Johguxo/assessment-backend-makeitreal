@@ -23,6 +23,7 @@ const fields = {
   },
   image: {
     type: String,
+    default: 'https://res.cloudinary.com/johguxo-gonzales/image/upload/v1656618838/nauta_ledvrn.png'
   }
 };
 
