@@ -39,8 +39,8 @@ exports.fetch_all = async (req, res, next) => {
   const populate = referencesNames.join(' ');
 
   let findQuery = {};
-  if (params.userId) {
-    findQuery = { userId: params.userId };
+  if (req.query.userId) {
+    findQuery = { userId: req.query.userId };
   }
   
   try {
