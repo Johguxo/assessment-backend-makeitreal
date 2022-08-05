@@ -1,19 +1,18 @@
 const { Model, fields, references } = require('./model');
 const { Fav } = require('../fav/model');
-const { sign } = require('jsonwebtoken');
 const { paginationParseParams, sortParseParams, sortingStr } = require('../utils');
 const referencesNames = Object.getOwnPropertyNames(references);
 
 // fetch all documents from collection
 exports.fetch = async (req, res, next) => {
-  const { params = {} } = req;
+  const { query = {} } = req;
   const { page, limit, skip } = paginationParseParams(req.query);
   const { sortBy, direction } = sortParseParams(req.query, fields);
   const populate = referencesNames.join(' ');
 
   let findQuery = {};
-  if (params.userId) {
-    findQuery = { userId: params.userId };
+  if (query.userId) {
+    findQuery = { userId: query.userId };
   }
 
   const all = Model.find(findQuery)
@@ -62,24 +61,45 @@ exports.read = async (req, res, next) => {
   }
 };
 
+exports.updateItem = async (req, res, next) => {
+  const populate = referencesNames.join(' ');
+  const { id } = req.params;
+  const { _id, title, description, link } = req.body
+  const newData = { title, description, link }
+  try {
+    const favUpdated = await Fav.findByIdAndUpdate(_id, {...newData}, { new:true });
+    const favList = await Model.findById(id).populate(populate).exec();
+    res.status(200);
+    res.json({ 
+      success: true, 
+      message: `${Model.modelName} has been updated`,
+      data: favList
+    });
+  } catch (err) {
+    next(new Error(err));
+  }
+}
+
 exports.addItem = async (req, res, next) => {
+  const populate = referencesNames.join(' ');
   const { id } = req.params;
   const body = req.body;
 
   const newFav = new Fav(body);
 
   try {
-    const favs = await Model.findById(id);
+    const favList = await Model.findById(id);
     const favSaved = await newFav.save();
 
-    favs.list.push(favSaved)
-    await favs.save();
+    favList.list.push(favSaved);
+    await favList.save();
 
+    const newFavList = await Model.findById(id).populate(populate).exec();
     res.status(200);
     res.json({ 
       success: true, 
       message: `${Model.modelName} has been updated`,
-      data: favSaved
+      data: newFavList
     });
   } catch (err) {
     next(new Error(err));
